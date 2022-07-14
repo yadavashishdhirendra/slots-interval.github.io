@@ -1,25 +1,48 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react'
+import moment from 'moment';
+import './App.css'
 
-function App() {
+const App = () => {
+  let intime = "12:00 Pm"
+  let outtime = "08:00 Pm"
+  const [result, setResult] = useState([])
+  console.log("Array", result)
+
+  function intervals(startString, endString) {
+    var start = moment(startString, 'hh:mm a');
+    var end = moment(endString, 'hh:mm a');
+    start.minutes(Math.ceil(start.minutes() / 15) * 15);
+
+    var current = moment(start);
+
+    while (current <= end) {
+      if (result.includes(current.format('hh:mm a'))) {
+        return null
+      }
+      else {
+        result.push(current.format('hh:mm a'));
+        current.add(15, 'minutes');
+      }
+    }
+
+
+    return result;
+  }
+
+  intervals(intime, outtime);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='slots'>
+      {
+        result && result.length > 0 ? result.map((time, index) => {
+          return (
+            <div key={index}>
+              <p>{time}</p>
+            </div>
+          )
+        }) : null
+      }
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
